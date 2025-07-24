@@ -1,5 +1,7 @@
 # LoveMatch Thailand 💕
 
+[![screencapture-preview-thai-vid-match-lovable-app-2025-07-24-19-29-12.png](https://i.postimg.cc/Dzt4tjvN/screencapture-preview-thai-vid-match-lovable-app-2025-07-24-19-29-12.png)](https://postimg.cc/yJyNRTSh)
+
 LoveMatch Thailand is a modern, Thai-focused dating web application that leverages social media integration, short video profiles, and AI-assisted matching to connect users. Built with React, TypeScript, and Supabase, it provides an engaging dating platform with a beautiful pink gradient design.
 
 ![LoveMatch Thailand](https://img.shields.io/badge/Built%20with-Love-pink?style=for-the-badge) ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white) ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB) ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
