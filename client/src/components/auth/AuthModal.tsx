@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -7,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Eye, EyeOff, Heart, Facebook, Instagram } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 
 interface AuthModalProps {
   open: boolean;
@@ -19,23 +19,21 @@ const AuthModal = ({ open, onOpenChange }: AuthModalProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { toast } = useToast();
+  const { signUp, signIn } = useAuth();
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
     try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-      });
-      
-      if (error) throw error;
+      await signUp(email, password);
       
       toast({
-        title: "ตรวจสอบอีเมลของคุณ!",
-        description: "เราได้ส่งลิงก์ยืนยันไปยังอีเมลของคุณแล้ว",
+        title: "สมัครสมาชิกสำเร็จ!",
+        description: "ยินดีต้อนรับสู่ LoveMatch Thailand! 💕",
       });
+      
+      onOpenChange(false);
     } catch (error: any) {
       toast({
         title: "เกิดข้อผิดพลาด",
@@ -52,12 +50,12 @@ const AuthModal = ({ open, onOpenChange }: AuthModalProps) => {
     setIsLoading(true);
     
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      await signIn(email, password);
       
-      if (error) throw error;
+      toast({
+        title: "เข้าสู่ระบบสำเร็จ!",
+        description: "ยินดีต้อนรับกลับมา! 💕",
+      });
       
       onOpenChange(false);
     } catch (error: any) {
@@ -72,22 +70,12 @@ const AuthModal = ({ open, onOpenChange }: AuthModalProps) => {
   };
 
   const handleSocialLogin = async (provider: 'facebook' | 'google') => {
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider,
-        options: {
-          redirectTo: `${window.location.origin}/`,
-        },
-      });
-      
-      if (error) throw error;
-    } catch (error: any) {
-      toast({
-        title: "เกิดข้อผิดพลาด",
-        description: error.message,
-        variant: "destructive",
-      });
-    }
+    // Social login not implemented yet
+    toast({
+      title: "ฟีเจอร์นี้ยังไม่พร้อมใช้งาน",
+      description: "กรุณาใช้อีเมลในการสมัครสมาชิก",
+      variant: "destructive",
+    });
   };
 
   return (

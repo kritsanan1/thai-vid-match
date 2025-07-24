@@ -1,39 +1,25 @@
-import { useState, useEffect } from 'react';
 import { Camera, Settings, LogOut, Heart, Star, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
+import { useQuery } from '@tanstack/react-query';
 
 const ProfileCard = () => {
-  const [user, setUser] = useState<any>(null);
-  const [profile, setProfile] = useState<any>(null);
+  const { user, signOut } = useAuth();
   const { toast } = useToast();
 
-  useEffect(() => {
-    const getProfile = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        setUser(user);
-        
-        // Try to get user profile
-        const { data: profileData } = await supabase
-          .from('user_profiles')
-          .select('*')
-          .eq('user_id', user.id)
-          .single();
-        
-        setProfile(profileData);
-      }
-    };
+  const { data: profileData } = useQuery({
+    queryKey: ['/api/profile'],
+    enabled: !!user,
+  });
 
-    getProfile();
-  }, []);
+  const profile = profileData?.profile;
 
   const handleSignOut = async () => {
     try {
-      await supabase.auth.signOut();
+      await signOut();
       toast({
         title: "ออกจากระบบแล้ว",
         description: "แล้วพบกันใหม่! 👋",

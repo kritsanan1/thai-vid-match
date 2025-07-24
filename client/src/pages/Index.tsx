@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { useState } from 'react';
 import { Heart, MessageCircle, User, Sparkles, Video } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -8,35 +7,23 @@ import AuthModal from '@/components/auth/AuthModal';
 import ProfileCard from '@/components/profile/ProfileCard';
 import SwipeInterface from '@/components/swipe/SwipeInterface';
 import BottomNavigation from '@/components/navigation/BottomNavigation';
-import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 
 const Index = () => {
-  const [user, setUser] = useState(null);
+  const { user, isLoading } = useAuth();
   const [showAuth, setShowAuth] = useState(false);
   const [currentView, setCurrentView] = useState('discover');
-  const { toast } = useToast();
 
-  useEffect(() => {
-    // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-    });
-
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        toast({
-          title: "ยินดีต้อนรับสู่ LoveMatch Thailand! 💕",
-          description: "พบเจอความรักแท้ในแบบที่คุณเป็น",
-        });
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [toast]);
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 mx-auto mb-4 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-muted-foreground">กำลังโหลด...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!user) {
     return (
