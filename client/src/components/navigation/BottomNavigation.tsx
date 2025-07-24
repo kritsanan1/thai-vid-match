@@ -1,4 +1,4 @@
-import { Heart, MessageCircle, User, Sparkles, Star } from 'lucide-react';
+import { Heart, MessageCircle, User, Sparkles, Star, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface BottomNavigationProps {
@@ -12,7 +12,7 @@ const BottomNavigation = ({ currentView, onViewChange }: BottomNavigationProps) 
     { id: 'matches', icon: Heart, label: 'แมทช์' },
     { id: 'chat', icon: MessageCircle, label: 'แชท' },
     { id: 'ratings', icon: Star, label: 'คะแนน' },
-    { id: 'profile', icon: User, label: 'โปรไฟล์' },
+    { id: 'settings', icon: Settings, label: 'ตั้งค่า' },
   ];
 
   return (

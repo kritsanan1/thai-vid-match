@@ -8,18 +8,29 @@ import ProfileCard from '@/components/profile/ProfileCard';
 import SwipeInterface from '@/components/swipe/SwipeInterface';
 import BottomNavigation from '@/components/navigation/BottomNavigation';
 import RatingPrompt from '@/components/rating/RatingPrompt';
+import SafeBrowseInterface from '@/components/safemode/SafeBrowseInterface';
+import SafeModeReminder from '@/components/safemode/SafeModeReminder';
 import { useAuth } from '@/hooks/useAuth';
 import { useLocation } from 'wouter';
+import { useQuery } from '@tanstack/react-query';
 
 const Index = () => {
   const { user, isLoading } = useAuth();
   const [showAuth, setShowAuth] = useState(false);
   const [currentView, setCurrentView] = useState('discover');
   const [, setLocation] = useLocation();
+
+  // Check Safe Mode status
+  const { data: safeModeStatus } = useQuery({
+    queryKey: ['/api/safe-mode/status'],
+    enabled: !!user,
+  });
   
   const handleViewChange = (view: string) => {
     if (view === 'ratings') {
       setLocation('/ratings');
+    } else if (view === 'settings') {
+      setLocation('/settings');
     } else {
       setCurrentView(view);
     }
@@ -122,7 +133,18 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Content based on current view */}
       <div className="pb-20">
-        {currentView === 'discover' && <SwipeInterface />}
+        {/* Safe Mode Reminder */}
+        <SafeModeReminder />
+
+        {currentView === 'discover' && (
+          safeModeStatus?.enabled ? (
+            <div className="p-4">
+              <SafeBrowseInterface />
+            </div>
+          ) : (
+            <SwipeInterface />
+          )
+        )}
         {currentView === 'matches' && (
           <div className="p-4 space-y-4">
             <h2 className="text-2xl font-bold mb-4">การจับคู่ของคุณ</h2>

@@ -64,6 +64,12 @@ export interface IStorage {
   getUserRatingHistory(userId: string): Promise<MatchRating[]>;
   getAverageUserRating(userId: string): Promise<number>;
   getRatingsByCategories(userId: string): Promise<Record<string, number>>;
+  
+  // Safe Mode methods
+  toggleSafeMode(userId: string, enabled: boolean): Promise<void>;
+  getSafeModeStatus(userId: string): Promise<{ enabled: boolean; activatedAt?: Date; reminderInterval: number }>;
+  updateSafeModeReminderInterval(userId: string, intervalDays: number): Promise<void>;
+  markSafeModeReminderSent(userId: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -275,6 +281,56 @@ export class DatabaseStorage implements IStorage {
     });
     
     return result;
+  }
+
+  // Safe Mode methods
+  async toggleSafeMode(userId: string, enabled: boolean): Promise<void> {
+    const now = new Date();
+    await db
+      .update(userPreferences)
+      .set({
+        safeModeEnabled: enabled,
+        safeModeActivatedAt: enabled ? now : null,
+        updatedAt: now,
+      })
+      .where(eq(userPreferences.userId, userId));
+  }
+
+  async getSafeModeStatus(userId: string): Promise<{ enabled: boolean; activatedAt?: Date; reminderInterval: number }> {
+    const [result] = await db
+      .select({
+        safeModeEnabled: userPreferences.safeModeEnabled,
+        safeModeActivatedAt: userPreferences.safeModeActivatedAt,
+        safeModeReminderInterval: userPreferences.safeModeReminderInterval,
+      })
+      .from(userPreferences)
+      .where(eq(userPreferences.userId, userId));
+
+    return {
+      enabled: result?.safeModeEnabled || false,
+      activatedAt: result?.safeModeActivatedAt || undefined,
+      reminderInterval: result?.safeModeReminderInterval || 7,
+    };
+  }
+
+  async updateSafeModeReminderInterval(userId: string, intervalDays: number): Promise<void> {
+    await db
+      .update(userPreferences)
+      .set({
+        safeModeReminderInterval: intervalDays,
+        updatedAt: new Date(),
+      })
+      .where(eq(userPreferences.userId, userId));
+  }
+
+  async markSafeModeReminderSent(userId: string): Promise<void> {
+    await db
+      .update(userPreferences)
+      .set({
+        lastSafeModeReminder: new Date(),
+        updatedAt: new Date(),
+      })
+      .where(eq(userPreferences.userId, userId));
   }
 }
 
@@ -526,6 +582,41 @@ export class MemStorage implements IStorage {
     
     return result;
   }
+
+  // Safe Mode methods - MemStorage implementation
+  async toggleSafeMode(userId: string, enabled: boolean): Promise<void> {
+    const userPrefs = this.preferences.get(userId);
+    if (userPrefs) {
+      userPrefs.safeModeEnabled = enabled;
+      userPrefs.safeModeActivatedAt = enabled ? new Date() : undefined;
+      userPrefs.updatedAt = new Date();
+    }
+  }
+
+  async getSafeModeStatus(userId: string): Promise<{ enabled: boolean; activatedAt?: Date; reminderInterval: number }> {
+    const userPrefs = this.preferences.get(userId);
+    return {
+      enabled: userPrefs?.safeModeEnabled || false,
+      activatedAt: userPrefs?.safeModeActivatedAt,
+      reminderInterval: userPrefs?.safeModeReminderInterval || 7,
+    };
+  }
+
+  async updateSafeModeReminderInterval(userId: string, intervalDays: number): Promise<void> {
+    const userPrefs = this.preferences.get(userId);
+    if (userPrefs) {
+      userPrefs.safeModeReminderInterval = intervalDays;
+      userPrefs.updatedAt = new Date();
+    }
+  }
+
+  async markSafeModeReminderSent(userId: string): Promise<void> {
+    const userPrefs = this.preferences.get(userId);
+    if (userPrefs) {
+      userPrefs.lastSafeModeReminder = new Date();
+      userPrefs.updatedAt = new Date();
+    }
+  }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();

@@ -46,6 +46,11 @@ export const userPreferences = pgTable("user_preferences", {
   maxAge: integer("max_age").default(50),
   maxDistance: integer("max_distance").default(50), // km
   showMeOnDiscovery: boolean("show_me_on_discovery").default(true),
+  // Safe Mode settings
+  safeModeEnabled: boolean("safe_mode_enabled").default(false),
+  safeModeActivatedAt: timestamp("safe_mode_activated_at"),
+  safeModeReminderInterval: integer("safe_mode_reminder_interval").default(7), // days
+  lastSafeModeReminder: timestamp("last_safe_mode_reminder"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

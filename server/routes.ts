@@ -304,6 +304,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Safe Mode routes
+  app.get("/api/safe-mode/status", requireAuth, async (req, res) => {
+    try {
+      const userId = req.session.userId!;
+      const status = await storage.getSafeModeStatus(userId);
+      res.json(status);
+    } catch (error: any) {
+      console.error("Get safe mode status error:", error);
+      res.status(500).json({ error: "Failed to get safe mode status" });
+    }
+  });
+
+  app.post("/api/safe-mode/toggle", requireAuth, async (req, res) => {
+    try {
+      const userId = req.session.userId!;
+      const { enabled } = req.body;
+      
+      await storage.toggleSafeMode(userId, enabled);
+      res.json({ success: true, enabled });
+    } catch (error: any) {
+      console.error("Toggle safe mode error:", error);
+      res.status(400).json({ error: error.message || "Failed to toggle safe mode" });
+    }
+  });
+
+  app.put("/api/safe-mode/reminder-interval", requireAuth, async (req, res) => {
+    try {
+      const userId = req.session.userId!;
+      const { intervalDays } = req.body;
+      
+      await storage.updateSafeModeReminderInterval(userId, intervalDays);
+      res.json({ success: true });
+    } catch (error: any) {
+      console.error("Update reminder interval error:", error);
+      res.status(400).json({ error: error.message || "Failed to update reminder interval" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

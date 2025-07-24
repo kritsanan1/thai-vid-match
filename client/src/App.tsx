@@ -7,6 +7,7 @@ import { queryClient } from "@/lib/queryClient";
 import { AuthContext, useAuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
 import Ratings from "./pages/Ratings";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const AppWithAuth = () => {
@@ -20,6 +21,7 @@ const AppWithAuth = () => {
         <Switch>
           <Route path="/" component={Index} />
           <Route path="/ratings" component={Ratings} />
+          <Route path="/settings" component={Settings} />
           <Route component={NotFound} />
         </Switch>
       </TooltipProvider>
