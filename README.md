@@ -1,73 +1,58 @@
-# Welcome to your Lovable project
+# LoveMatch Thailand 💕
 
-## Project info
+LoveMatch Thailand is a modern, Thai-focused dating web application that leverages social media integration, short video profiles, and AI-assisted matching to connect users. Built with React, TypeScript, and Supabase, it provides an engaging dating platform with a beautiful pink gradient design.
 
-**URL**: https://lovable.dev/projects/e181b21c-ce6e-4928-acb2-c1f2802ec3d7
+![LoveMatch Thailand](https://img.shields.io/badge/Built%20with-Love-pink?style=for-the-badge) ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white) ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB) ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
 
-## How can I edit this code?
+## 🌟 Features
 
-There are several ways of editing your application.
+- **📱 Modern Dating Experience**: Tinder-style swipe interface with smooth animations
+- **🎥 Video Profiles**: Support for video introductions and profile enhancement
+- **🤖 AI-Powered Matching**: Intelligent compatibility scoring based on interests and preferences
+- **💬 Secure Messaging**: End-to-end encrypted messaging between matched users
+- **📲 Social Media Integration**: Connect with Facebook, TikTok, Instagram, and Twitter
+- **💎 Freemium Model**: Free tier with premium features and in-app purchases
+- **🇹🇭 Thai-Focused**: Designed specifically for the Thai dating market
 
-**Use Lovable**
+## 🚀 Quick Start
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/e181b21c-ce6e-4928-acb2-c1f2802ec3d7) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
+```bash
+# Clone the repository
 git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
 cd <YOUR_PROJECT_NAME>
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Install dependencies
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Set up environment (copy .env.example to .env.local)
+cp .env.example .env.local
+
+# Start development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## 📚 Documentation
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- 📁 [**File Structure Guide**](filesExplainer.md) - Complete project structure breakdown
+- 🛠️ [**Scripts Documentation**](scripts.md) - All NPM scripts explained
+- 🏗️ [**Architecture Analysis**](structure-analysis.md) - Structure recommendations and migration guide
+- 🤝 [**Contributing Guide**](.github/CONTRIBUTING.md) - How to contribute to the project
+- 🔧 [**Environment Setup**](.env.example) - Environment variables template
 
-**Use GitHub Codespaces**
+## 🏗️ Architecture
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+![Architecture Diagram](architecture.png)
 
-## What technologies are used for this project?
+## 🛠️ Technologies
 
-This project is built with:
+- **Frontend**: Vite, React, TypeScript, Tailwind CSS
+- **Backend**: Supabase (PostgreSQL + Auth)
+- **UI Components**: Shadcn/ui
+- **Styling**: Custom design system with pink gradient theme
+- **Authentication**: Supabase Auth with social media login
+- **Real-time**: Supabase real-time subscriptions
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 📄 License
 
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/e181b21c-ce6e-4928-acb2-c1f2802ec3d7) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+This project is built with [Lovable](https://lovable.dev) and is available for editing at:
+**URL**: https://lovable.dev/projects/e181b21c-ce6e-4928-acb2-c1f2802ec3d7
