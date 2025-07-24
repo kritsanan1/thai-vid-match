@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_match_scores: {
+        Row: {
+          calculated_at: string | null
+          compatibility_score: number | null
+          factors: Json | null
+          id: string
+          user1_id: string | null
+          user2_id: string | null
+        }
+        Insert: {
+          calculated_at?: string | null
+          compatibility_score?: number | null
+          factors?: Json | null
+          id?: string
+          user1_id?: string | null
+          user2_id?: string | null
+        }
+        Update: {
+          calculated_at?: string | null
+          compatibility_score?: number | null
+          factors?: Json | null
+          id?: string
+          user1_id?: string | null
+          user2_id?: string | null
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           action: string
@@ -1285,6 +1312,86 @@ export type Database = {
           },
         ]
       }
+      matches: {
+        Row: {
+          created_at: string | null
+          id: string
+          matched_at: string | null
+          status: Database["public"]["Enums"]["match_status"] | null
+          updated_at: string | null
+          user1_id: string | null
+          user2_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          matched_at?: string | null
+          status?: Database["public"]["Enums"]["match_status"] | null
+          updated_at?: string | null
+          user1_id?: string | null
+          user2_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          matched_at?: string | null
+          status?: Database["public"]["Enums"]["match_status"] | null
+          updated_at?: string | null
+          user1_id?: string | null
+          user2_id?: string | null
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          match_id: string | null
+          media_url: string | null
+          message_type: string | null
+          read_at: string | null
+          receiver_id: string | null
+          sender_id: string | null
+          status: Database["public"]["Enums"]["message_status"] | null
+          updated_at: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          match_id?: string | null
+          media_url?: string | null
+          message_type?: string | null
+          read_at?: string | null
+          receiver_id?: string | null
+          sender_id?: string | null
+          status?: Database["public"]["Enums"]["message_status"] | null
+          updated_at?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          match_id?: string | null
+          media_url?: string | null
+          message_type?: string | null
+          read_at?: string | null
+          receiver_id?: string | null
+          sender_id?: string | null
+          status?: Database["public"]["Enums"]["message_status"] | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notification_templates: {
         Row: {
           content_en: string
@@ -1860,6 +1967,39 @@ export type Database = {
           },
         ]
       }
+      social_media_connections: {
+        Row: {
+          access_token: string | null
+          connected_at: string | null
+          id: string
+          is_active: boolean | null
+          platform: Database["public"]["Enums"]["social_platform"]
+          platform_user_id: string
+          platform_username: string | null
+          user_id: string | null
+        }
+        Insert: {
+          access_token?: string | null
+          connected_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          platform: Database["public"]["Enums"]["social_platform"]
+          platform_user_id: string
+          platform_username?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          access_token?: string | null
+          connected_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          platform?: Database["public"]["Enums"]["social_platform"]
+          platform_user_id?: string
+          platform_username?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       stripe_customers: {
         Row: {
           created_at: string | null
@@ -2043,6 +2183,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      swipe_actions: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_like: boolean
+          swiped_id: string | null
+          swiper_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_like: boolean
+          swiped_id?: string | null
+          swiper_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_like?: boolean
+          swiped_id?: string | null
+          swiper_id?: string | null
+        }
+        Relationships: []
       }
       system_alerts: {
         Row: {
@@ -2325,6 +2489,183 @@ export type Database = {
         }
         Relationships: []
       }
+      user_preferences: {
+        Row: {
+          created_at: string | null
+          id: string
+          max_age: number | null
+          max_distance: number | null
+          min_age: number | null
+          preferred_gender: Database["public"]["Enums"]["user_gender"][] | null
+          show_me_on_discovery: boolean | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          max_age?: number | null
+          max_distance?: number | null
+          min_age?: number | null
+          preferred_gender?: Database["public"]["Enums"]["user_gender"][] | null
+          show_me_on_discovery?: boolean | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          max_age?: number | null
+          max_distance?: number | null
+          min_age?: number | null
+          preferred_gender?: Database["public"]["Enums"]["user_gender"][] | null
+          show_me_on_discovery?: boolean | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      user_profiles: {
+        Row: {
+          age: number
+          bio: string | null
+          created_at: string | null
+          display_name: string | null
+          education: string | null
+          full_name: string
+          gender: Database["public"]["Enums"]["user_gender"]
+          height: number | null
+          id: string
+          interests: string[] | null
+          is_active: boolean | null
+          is_verified: boolean | null
+          last_active: string | null
+          location: string | null
+          occupation: string | null
+          profile_images: string[] | null
+          profile_video_url: string | null
+          subscription_expires_at: string | null
+          subscription_tier:
+            | Database["public"]["Enums"]["subscription_tier"]
+            | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          age: number
+          bio?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          education?: string | null
+          full_name: string
+          gender: Database["public"]["Enums"]["user_gender"]
+          height?: number | null
+          id?: string
+          interests?: string[] | null
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          last_active?: string | null
+          location?: string | null
+          occupation?: string | null
+          profile_images?: string[] | null
+          profile_video_url?: string | null
+          subscription_expires_at?: string | null
+          subscription_tier?:
+            | Database["public"]["Enums"]["subscription_tier"]
+            | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          age?: number
+          bio?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          education?: string | null
+          full_name?: string
+          gender?: Database["public"]["Enums"]["user_gender"]
+          height?: number | null
+          id?: string
+          interests?: string[] | null
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          last_active?: string | null
+          location?: string | null
+          occupation?: string | null
+          profile_images?: string[] | null
+          profile_video_url?: string | null
+          subscription_expires_at?: string | null
+          subscription_tier?:
+            | Database["public"]["Enums"]["subscription_tier"]
+            | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      user_purchases: {
+        Row: {
+          amount: number
+          created_at: string | null
+          currency: string | null
+          expires_at: string | null
+          feature_name: string
+          id: string
+          payment_status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          currency?: string | null
+          expires_at?: string | null
+          feature_name: string
+          id?: string
+          payment_status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          currency?: string | null
+          expires_at?: string | null
+          feature_name?: string
+          id?: string
+          payment_status?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      user_reports: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          reason: string
+          reported_id: string | null
+          reporter_id: string | null
+          status: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          reason: string
+          reported_id?: string | null
+          reporter_id?: string | null
+          status?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          reason?: string
+          reported_id?: string | null
+          reporter_id?: string | null
+          status?: string | null
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           created_at: string | null
@@ -2404,6 +2745,8 @@ export type Database = {
       employee_role: "employee" | "manager" | "admin"
       enrollment_status: "pending" | "active" | "completed" | "cancelled"
       installment_status: "active" | "completed" | "defaulted" | "cancelled"
+      match_status: "pending" | "matched" | "rejected" | "blocked"
+      message_status: "sent" | "delivered" | "read"
       payment_method:
         | "bank_transfer"
         | "credit_card"
@@ -2415,6 +2758,7 @@ export type Database = {
         | "completed"
         | "failed"
         | "refunded"
+      social_platform: "facebook" | "instagram" | "tiktok" | "twitter"
       stripe_order_status: "pending" | "completed" | "canceled"
       stripe_subscription_status:
         | "not_started"
@@ -2426,6 +2770,8 @@ export type Database = {
         | "canceled"
         | "unpaid"
         | "paused"
+      subscription_tier: "free" | "premium" | "vip"
+      user_gender: "male" | "female" | "non_binary" | "prefer_not_to_say"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2559,6 +2905,8 @@ export const Constants = {
       employee_role: ["employee", "manager", "admin"],
       enrollment_status: ["pending", "active", "completed", "cancelled"],
       installment_status: ["active", "completed", "defaulted", "cancelled"],
+      match_status: ["pending", "matched", "rejected", "blocked"],
+      message_status: ["sent", "delivered", "read"],
       payment_method: [
         "bank_transfer",
         "credit_card",
@@ -2572,6 +2920,7 @@ export const Constants = {
         "failed",
         "refunded",
       ],
+      social_platform: ["facebook", "instagram", "tiktok", "twitter"],
       stripe_order_status: ["pending", "completed", "canceled"],
       stripe_subscription_status: [
         "not_started",
@@ -2584,6 +2933,8 @@ export const Constants = {
         "unpaid",
         "paused",
       ],
+      subscription_tier: ["free", "premium", "vip"],
+      user_gender: ["male", "female", "non_binary", "prefer_not_to_say"],
     },
   },
 } as const
