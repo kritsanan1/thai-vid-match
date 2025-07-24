@@ -85,6 +85,20 @@ export const messages = pgTable("messages", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Match Ratings and Feedback
+export const matchRatings = pgTable("match_ratings", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  matchId: uuid("match_id").references(() => matches.id).notNull(),
+  raterId: uuid("rater_id").references(() => users.id).notNull(),
+  ratedUserId: uuid("rated_user_id").references(() => users.id).notNull(),
+  rating: integer("rating").notNull(), // 1-5 scale
+  feedback: text("feedback"),
+  categories: text("categories").array(), // e.g., ['conversation', 'photos', 'compatibility']
+  wouldRecommend: boolean("would_recommend"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).pick({
   email: true,
@@ -114,6 +128,12 @@ export const insertMessageSchema = createInsertSchema(messages).omit({
   updatedAt: true,
 });
 
+export const insertMatchRatingSchema = createInsertSchema(matchRatings).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Types
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
@@ -126,3 +146,5 @@ export type SwipeAction = typeof swipeActions.$inferSelect;
 export type InsertSwipeAction = z.infer<typeof insertSwipeActionSchema>;
 export type Message = typeof messages.$inferSelect;
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
+export type MatchRating = typeof matchRatings.$inferSelect;
+export type InsertMatchRating = z.infer<typeof insertMatchRatingSchema>;

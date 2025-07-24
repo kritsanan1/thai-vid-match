@@ -6,6 +6,7 @@ import { Route, Switch } from "wouter";
 import { queryClient } from "@/lib/queryClient";
 import { AuthContext, useAuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
+import Ratings from "./pages/Ratings";
 import NotFound from "./pages/NotFound";
 
 const AppWithAuth = () => {
@@ -18,6 +19,7 @@ const AppWithAuth = () => {
         <Sonner />
         <Switch>
           <Route path="/" component={Index} />
+          <Route path="/ratings" component={Ratings} />
           <Route component={NotFound} />
         </Switch>
       </TooltipProvider>

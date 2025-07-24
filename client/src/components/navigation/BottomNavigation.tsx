@@ -1,4 +1,4 @@
-import { Heart, MessageCircle, User, Sparkles } from 'lucide-react';
+import { Heart, MessageCircle, User, Sparkles, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface BottomNavigationProps {
@@ -11,12 +11,13 @@ const BottomNavigation = ({ currentView, onViewChange }: BottomNavigationProps) 
     { id: 'discover', icon: Sparkles, label: 'ค้นพบ' },
     { id: 'matches', icon: Heart, label: 'แมทช์' },
     { id: 'chat', icon: MessageCircle, label: 'แชท' },
+    { id: 'ratings', icon: Star, label: 'คะแนน' },
     { id: 'profile', icon: User, label: 'โปรไฟล์' },
   ];
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border">
-      <div className="grid grid-cols-4 h-16">
+      <div className="grid grid-cols-5 h-16">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = currentView === item.id;

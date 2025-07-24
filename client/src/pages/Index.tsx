@@ -7,12 +7,23 @@ import AuthModal from '@/components/auth/AuthModal';
 import ProfileCard from '@/components/profile/ProfileCard';
 import SwipeInterface from '@/components/swipe/SwipeInterface';
 import BottomNavigation from '@/components/navigation/BottomNavigation';
+import RatingPrompt from '@/components/rating/RatingPrompt';
 import { useAuth } from '@/hooks/useAuth';
+import { useLocation } from 'wouter';
 
 const Index = () => {
   const { user, isLoading } = useAuth();
   const [showAuth, setShowAuth] = useState(false);
   const [currentView, setCurrentView] = useState('discover');
+  const [, setLocation] = useLocation();
+  
+  const handleViewChange = (view: string) => {
+    if (view === 'ratings') {
+      setLocation('/ratings');
+    } else {
+      setCurrentView(view);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -113,8 +124,16 @@ const Index = () => {
       <div className="pb-20">
         {currentView === 'discover' && <SwipeInterface />}
         {currentView === 'matches' && (
-          <div className="p-4">
+          <div className="p-4 space-y-4">
             <h2 className="text-2xl font-bold mb-4">การจับคู่ของคุณ</h2>
+            
+            {/* Rating Prompt Example */}
+            <RatingPrompt
+              matchId="demo-match-123"
+              partnerName="สมาชิกตัวอย่าง"
+              onDismiss={() => {}}
+            />
+            
             <p className="text-muted-foreground">ยังไม่มีการจับคู่ เริ่มสไวป์เพื่อค้นหาคนที่ใช่!</p>
           </div>
         )}
@@ -130,7 +149,7 @@ const Index = () => {
       {/* Bottom Navigation */}
       <BottomNavigation 
         currentView={currentView}
-        onViewChange={setCurrentView}
+        onViewChange={handleViewChange}
       />
     </div>
   );

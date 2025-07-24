@@ -8,6 +8,7 @@ import {
   matches, 
   swipeActions, 
   messages,
+  matchRatings,
   type User, 
   type InsertUser,
   type UserProfile,
@@ -18,7 +19,9 @@ import {
   type SwipeAction,
   type InsertSwipeAction,
   type Message,
-  type InsertMessage
+  type InsertMessage,
+  type MatchRating,
+  type InsertMatchRating
 } from "@shared/schema";
 
 // Database connection
@@ -53,6 +56,14 @@ export interface IStorage {
   getMatchMessages(matchId: string): Promise<Message[]>;
   sendMessage(message: InsertMessage): Promise<Message>;
   markMessageAsRead(messageId: string, userId: string): Promise<void>;
+  
+  // Match ratings and feedback
+  createMatchRating(rating: InsertMatchRating): Promise<MatchRating>;
+  getMatchRating(matchId: string, raterId: string): Promise<MatchRating | undefined>;
+  updateMatchRating(ratingId: string, updates: Partial<MatchRating>): Promise<void>;
+  getUserRatingHistory(userId: string): Promise<MatchRating[]>;
+  getAverageUserRating(userId: string): Promise<number>;
+  getRatingsByCategories(userId: string): Promise<Record<string, number>>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -199,6 +210,72 @@ export class DatabaseStorage implements IStorage {
         eq(messages.receiverId, userId)
       ));
   }
+
+  async createMatchRating(rating: InsertMatchRating): Promise<MatchRating> {
+    const result = await db.insert(matchRatings).values(rating).returning();
+    return result[0];
+  }
+
+  async getMatchRating(matchId: string, raterId: string): Promise<MatchRating | undefined> {
+    const result = await db
+      .select()
+      .from(matchRatings)
+      .where(and(
+        eq(matchRatings.matchId, matchId),
+        eq(matchRatings.raterId, raterId)
+      ))
+      .limit(1);
+    return result[0];
+  }
+
+  async updateMatchRating(ratingId: string, updates: Partial<MatchRating>): Promise<void> {
+    await db.update(matchRatings).set(updates).where(eq(matchRatings.id, ratingId));
+  }
+
+  async getUserRatingHistory(userId: string): Promise<MatchRating[]> {
+    const result = await db
+      .select()
+      .from(matchRatings)
+      .where(eq(matchRatings.raterId, userId))
+      .orderBy(desc(matchRatings.createdAt));
+    return result;
+  }
+
+  async getAverageUserRating(userId: string): Promise<number> {
+    const ratings = await db
+      .select({ rating: matchRatings.rating })
+      .from(matchRatings)
+      .where(eq(matchRatings.ratedUserId, userId));
+    
+    if (ratings.length === 0) return 0;
+    const sum = ratings.reduce((acc, r) => acc + r.rating, 0);
+    return sum / ratings.length;
+  }
+
+  async getRatingsByCategories(userId: string): Promise<Record<string, number>> {
+    const ratings = await db
+      .select({ categories: matchRatings.categories, rating: matchRatings.rating })
+      .from(matchRatings)
+      .where(eq(matchRatings.ratedUserId, userId));
+    
+    const categoryRatings: Record<string, number[]> = {};
+    
+    ratings.forEach(r => {
+      if (r.categories) {
+        r.categories.forEach(category => {
+          if (!categoryRatings[category]) categoryRatings[category] = [];
+          categoryRatings[category].push(r.rating);
+        });
+      }
+    });
+    
+    const result: Record<string, number> = {};
+    Object.entries(categoryRatings).forEach(([category, values]) => {
+      result[category] = values.reduce((acc, val) => acc + val, 0) / values.length;
+    });
+    
+    return result;
+  }
 }
 
 // For development, we'll use in-memory storage initially
@@ -209,6 +286,7 @@ export class MemStorage implements IStorage {
   private matches: Map<string, Match> = new Map();
   private swipes: Map<string, SwipeAction> = new Map();
   private messages: Map<string, Message> = new Map();
+  private ratings: Map<string, MatchRating> = new Map();
 
   async getUserById(id: string): Promise<User | undefined> {
     return this.users.get(id);
@@ -384,6 +462,69 @@ export class MemStorage implements IStorage {
       message.readAt = new Date();
       message.updatedAt = new Date();
     }
+  }
+
+  async createMatchRating(rating: InsertMatchRating): Promise<MatchRating> {
+    const id = crypto.randomUUID();
+    const newRating: MatchRating = {
+      id,
+      ...rating,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.ratings.set(id, newRating);
+    return newRating;
+  }
+
+  async getMatchRating(matchId: string, raterId: string): Promise<MatchRating | undefined> {
+    return Array.from(this.ratings.values()).find(rating => 
+      rating.matchId === matchId && rating.raterId === raterId
+    );
+  }
+
+  async updateMatchRating(ratingId: string, updates: Partial<MatchRating>): Promise<void> {
+    const rating = this.ratings.get(ratingId);
+    if (rating) {
+      Object.assign(rating, updates, { updatedAt: new Date() });
+    }
+  }
+
+  async getUserRatingHistory(userId: string): Promise<MatchRating[]> {
+    return Array.from(this.ratings.values())
+      .filter(rating => rating.raterId === userId)
+      .sort((a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0));
+  }
+
+  async getAverageUserRating(userId: string): Promise<number> {
+    const userRatings = Array.from(this.ratings.values())
+      .filter(rating => rating.ratedUserId === userId);
+    
+    if (userRatings.length === 0) return 0;
+    const sum = userRatings.reduce((acc, rating) => acc + rating.rating, 0);
+    return sum / userRatings.length;
+  }
+
+  async getRatingsByCategories(userId: string): Promise<Record<string, number>> {
+    const userRatings = Array.from(this.ratings.values())
+      .filter(rating => rating.ratedUserId === userId);
+    
+    const categoryRatings: Record<string, number[]> = {};
+    
+    userRatings.forEach(rating => {
+      if (rating.categories) {
+        rating.categories.forEach(category => {
+          if (!categoryRatings[category]) categoryRatings[category] = [];
+          categoryRatings[category].push(rating.rating);
+        });
+      }
+    });
+    
+    const result: Record<string, number> = {};
+    Object.entries(categoryRatings).forEach(([category, values]) => {
+      result[category] = values.reduce((acc, val) => acc + val, 0) / values.length;
+    });
+    
+    return result;
   }
 }
 

@@ -6,7 +6,8 @@ import {
   insertUserSchema, 
   insertUserProfileSchema,
   insertSwipeActionSchema,
-  insertMessageSchema
+  insertMessageSchema,
+  insertMatchRatingSchema
 } from "@shared/schema";
 import { z } from "zod";
 
@@ -220,6 +221,86 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error: any) {
       console.error("Send message error:", error);
       res.status(400).json({ error: error.message || "Failed to send message" });
+    }
+  });
+
+  // Match rating routes
+  app.post("/api/matches/:matchId/rating", requireAuth, async (req, res) => {
+    try {
+      const { matchId } = req.params;
+      const userId = req.session.userId!;
+      
+      // Check if rating already exists
+      const existingRating = await storage.getMatchRating(matchId, userId);
+      if (existingRating) {
+        return res.status(400).json({ error: "คุณได้ให้คะแนนแมตช์นี้แล้ว" });
+      }
+      
+      const ratingData = insertMatchRatingSchema.parse({
+        ...req.body,
+        matchId,
+        raterId: userId,
+      });
+      
+      const rating = await storage.createMatchRating(ratingData);
+      res.json({ rating });
+    } catch (error: any) {
+      console.error("Create rating error:", error);
+      res.status(400).json({ error: error.message || "Failed to create rating" });
+    }
+  });
+
+  app.get("/api/matches/:matchId/rating", requireAuth, async (req, res) => {
+    try {
+      const { matchId } = req.params;
+      const userId = req.session.userId!;
+      
+      const rating = await storage.getMatchRating(matchId, userId);
+      res.json({ rating });
+    } catch (error: any) {
+      console.error("Get rating error:", error);
+      res.status(500).json({ error: "Failed to get rating" });
+    }
+  });
+
+  app.put("/api/ratings/:ratingId", requireAuth, async (req, res) => {
+    try {
+      const { ratingId } = req.params;
+      const updates = req.body;
+      
+      await storage.updateMatchRating(ratingId, updates);
+      res.json({ success: true });
+    } catch (error: any) {
+      console.error("Update rating error:", error);
+      res.status(400).json({ error: error.message || "Failed to update rating" });
+    }
+  });
+
+  app.get("/api/ratings/history", requireAuth, async (req, res) => {
+    try {
+      const userId = req.session.userId!;
+      const ratings = await storage.getUserRatingHistory(userId);
+      res.json({ ratings });
+    } catch (error: any) {
+      console.error("Get rating history error:", error);
+      res.status(500).json({ error: "Failed to get rating history" });
+    }
+  });
+
+  app.get("/api/users/:userId/rating-stats", requireAuth, async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const averageRating = await storage.getAverageUserRating(userId);
+      const categoryRatings = await storage.getRatingsByCategories(userId);
+      
+      res.json({ 
+        averageRating,
+        categoryRatings,
+        totalRatings: Object.values(categoryRatings).length
+      });
+    } catch (error: any) {
+      console.error("Get rating stats error:", error);
+      res.status(500).json({ error: "Failed to get rating stats" });
     }
   });
 
