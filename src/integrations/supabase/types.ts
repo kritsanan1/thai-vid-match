@@ -41,6 +41,129 @@ export type Database = {
         }
         Relationships: []
       }
+      analytics: {
+        Row: {
+          conversion_rate: number | null
+          id: string
+          interactions: number | null
+          metadata: Json | null
+          platform: Database["public"]["Enums"]["platform_type"] | null
+          prompt_id: string
+          timestamp: string | null
+          user_id: string
+          views: number | null
+        }
+        Insert: {
+          conversion_rate?: number | null
+          id?: string
+          interactions?: number | null
+          metadata?: Json | null
+          platform?: Database["public"]["Enums"]["platform_type"] | null
+          prompt_id: string
+          timestamp?: string | null
+          user_id: string
+          views?: number | null
+        }
+        Update: {
+          conversion_rate?: number | null
+          id?: string
+          interactions?: number | null
+          metadata?: Json | null
+          platform?: Database["public"]["Enums"]["platform_type"] | null
+          prompt_id?: string
+          timestamp?: string | null
+          user_id?: string
+          views?: number | null
+        }
+        Relationships: []
+      }
+      attractions: {
+        Row: {
+          admission_fee_thb: number | null
+          admission_fee_usd: number | null
+          category: string
+          contact_email: string | null
+          contact_phone: string | null
+          created_at: string | null
+          description_en: string
+          description_th: string | null
+          duration_hours: number | null
+          gallery_urls: string[] | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          is_featured: boolean | null
+          latitude: number | null
+          location: string | null
+          longitude: number | null
+          name_en: string
+          name_th: string | null
+          opening_hours: Json | null
+          rating_average: number | null
+          rating_count: number | null
+          short_description_en: string | null
+          short_description_th: string | null
+          updated_at: string | null
+          website_url: string | null
+        }
+        Insert: {
+          admission_fee_thb?: number | null
+          admission_fee_usd?: number | null
+          category?: string
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string | null
+          description_en: string
+          description_th?: string | null
+          duration_hours?: number | null
+          gallery_urls?: string[] | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          latitude?: number | null
+          location?: string | null
+          longitude?: number | null
+          name_en: string
+          name_th?: string | null
+          opening_hours?: Json | null
+          rating_average?: number | null
+          rating_count?: number | null
+          short_description_en?: string | null
+          short_description_th?: string | null
+          updated_at?: string | null
+          website_url?: string | null
+        }
+        Update: {
+          admission_fee_thb?: number | null
+          admission_fee_usd?: number | null
+          category?: string
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string | null
+          description_en?: string
+          description_th?: string | null
+          duration_hours?: number | null
+          gallery_urls?: string[] | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          latitude?: number | null
+          location?: string | null
+          longitude?: number | null
+          name_en?: string
+          name_th?: string | null
+          opening_hours?: Json | null
+          rating_average?: number | null
+          rating_count?: number | null
+          short_description_en?: string | null
+          short_description_th?: string | null
+          updated_at?: string | null
+          website_url?: string | null
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           action: string
@@ -70,6 +193,81 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      bookings: {
+        Row: {
+          booking_date: string
+          booking_time: string | null
+          booking_type: string
+          confirmation_code: string | null
+          contact_email: string | null
+          contact_name: string
+          contact_phone: string
+          created_at: string | null
+          id: string
+          notes: string | null
+          party_size: number | null
+          restaurant_id: string | null
+          service_id: string | null
+          special_requests: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          booking_date: string
+          booking_time?: string | null
+          booking_type: string
+          confirmation_code?: string | null
+          contact_email?: string | null
+          contact_name: string
+          contact_phone: string
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          party_size?: number | null
+          restaurant_id?: string | null
+          service_id?: string | null
+          special_requests?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          booking_date?: string
+          booking_time?: string | null
+          booking_type?: string
+          confirmation_code?: string | null
+          contact_email?: string | null
+          contact_name?: string
+          contact_phone?: string
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          party_size?: number | null
+          restaurant_id?: string | null
+          service_id?: string | null
+          special_requests?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       branches: {
         Row: {
@@ -129,6 +327,75 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      business_ads: {
+        Row: {
+          ad_description: string | null
+          ad_image_url: string | null
+          ad_title: string
+          ad_type: string | null
+          advertiser_id: string | null
+          business_name: string
+          clicks: number | null
+          created_at: string | null
+          duration_days: number | null
+          end_date: string | null
+          id: string
+          impressions: number | null
+          is_active: boolean | null
+          payment_status: string | null
+          placement: string | null
+          price_thb: number
+          start_date: string | null
+          stripe_payment_id: string | null
+          target_url: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          ad_description?: string | null
+          ad_image_url?: string | null
+          ad_title: string
+          ad_type?: string | null
+          advertiser_id?: string | null
+          business_name: string
+          clicks?: number | null
+          created_at?: string | null
+          duration_days?: number | null
+          end_date?: string | null
+          id?: string
+          impressions?: number | null
+          is_active?: boolean | null
+          payment_status?: string | null
+          placement?: string | null
+          price_thb: number
+          start_date?: string | null
+          stripe_payment_id?: string | null
+          target_url?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          ad_description?: string | null
+          ad_image_url?: string | null
+          ad_title?: string
+          ad_type?: string | null
+          advertiser_id?: string | null
+          business_name?: string
+          clicks?: number | null
+          created_at?: string | null
+          duration_days?: number | null
+          end_date?: string | null
+          id?: string
+          impressions?: number | null
+          is_active?: boolean | null
+          payment_status?: string | null
+          placement?: string | null
+          price_thb?: number
+          start_date?: string | null
+          stripe_payment_id?: string | null
+          target_url?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       categories: {
         Row: {
@@ -1268,6 +1535,84 @@ export type Database = {
         }
         Relationships: []
       }
+      jobs: {
+        Row: {
+          application_deadline: string | null
+          category: string | null
+          company_name: string
+          contact_email: string | null
+          contact_phone: string | null
+          created_at: string | null
+          description_en: string
+          description_th: string | null
+          id: string
+          is_active: boolean | null
+          is_featured: boolean | null
+          job_type: string | null
+          location: string | null
+          posted_by: string | null
+          requirements_en: string[] | null
+          requirements_th: string[] | null
+          salary_max_thb: number | null
+          salary_max_usd: number | null
+          salary_min_thb: number | null
+          salary_min_usd: number | null
+          title_en: string
+          title_th: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          application_deadline?: string | null
+          category?: string | null
+          company_name: string
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string | null
+          description_en: string
+          description_th?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          job_type?: string | null
+          location?: string | null
+          posted_by?: string | null
+          requirements_en?: string[] | null
+          requirements_th?: string[] | null
+          salary_max_thb?: number | null
+          salary_max_usd?: number | null
+          salary_min_thb?: number | null
+          salary_min_usd?: number | null
+          title_en: string
+          title_th?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          application_deadline?: string | null
+          category?: string | null
+          company_name?: string
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string | null
+          description_en?: string
+          description_th?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          job_type?: string | null
+          location?: string | null
+          posted_by?: string | null
+          requirements_en?: string[] | null
+          requirements_th?: string[] | null
+          salary_max_thb?: number | null
+          salary_max_usd?: number | null
+          salary_min_thb?: number | null
+          salary_min_usd?: number | null
+          title_en?: string
+          title_th?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       loyalty_programs: {
         Row: {
           created_at: string | null
@@ -1588,6 +1933,39 @@ export type Database = {
           },
         ]
       }
+      platform_integrations: {
+        Row: {
+          api_key: string | null
+          config: Json | null
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          platform: Database["public"]["Enums"]["platform_type"]
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          api_key?: string | null
+          config?: Json | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          platform: Database["public"]["Enums"]["platform_type"]
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          api_key?: string | null
+          config?: Json | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          platform?: Database["public"]["Enums"]["platform_type"]
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       playlist_tracks: {
         Row: {
           created_at: string | null
@@ -1790,6 +2168,9 @@ export type Database = {
           id: string
           phone: string | null
           role: Database["public"]["Enums"]["employee_role"] | null
+          subscription_status:
+            | Database["public"]["Enums"]["subscription_status"]
+            | null
           updated_at: string | null
           username: string | null
           website: string | null
@@ -1802,6 +2183,9 @@ export type Database = {
           id: string
           phone?: string | null
           role?: Database["public"]["Enums"]["employee_role"] | null
+          subscription_status?:
+            | Database["public"]["Enums"]["subscription_status"]
+            | null
           updated_at?: string | null
           username?: string | null
           website?: string | null
@@ -1814,6 +2198,9 @@ export type Database = {
           id?: string
           phone?: string | null
           role?: Database["public"]["Enums"]["employee_role"] | null
+          subscription_status?:
+            | Database["public"]["Enums"]["subscription_status"]
+            | null
           updated_at?: string | null
           username?: string | null
           website?: string | null
@@ -1908,30 +2295,45 @@ export type Database = {
           created_at: string
           id: string
           is_favorite: boolean | null
+          is_public: boolean | null
+          platform: Database["public"]["Enums"]["platform_type"] | null
+          status: Database["public"]["Enums"]["prompt_status"] | null
           tags: string[] | null
           title: string
           updated_at: string
+          usage_count: number | null
           user_id: string | null
+          version: number | null
         }
         Insert: {
           content: string
           created_at?: string
           id?: string
           is_favorite?: boolean | null
+          is_public?: boolean | null
+          platform?: Database["public"]["Enums"]["platform_type"] | null
+          status?: Database["public"]["Enums"]["prompt_status"] | null
           tags?: string[] | null
           title: string
           updated_at?: string
+          usage_count?: number | null
           user_id?: string | null
+          version?: number | null
         }
         Update: {
           content?: string
           created_at?: string
           id?: string
           is_favorite?: boolean | null
+          is_public?: boolean | null
+          platform?: Database["public"]["Enums"]["platform_type"] | null
+          status?: Database["public"]["Enums"]["prompt_status"] | null
           tags?: string[] | null
           title?: string
           updated_at?: string
+          usage_count?: number | null
           user_id?: string | null
+          version?: number | null
         }
         Relationships: []
       }
@@ -1966,6 +2368,235 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      restaurants: {
+        Row: {
+          address_en: string | null
+          address_th: string | null
+          contact_email: string | null
+          contact_phone: string | null
+          created_at: string | null
+          cuisine_type: string
+          delivery_available: boolean | null
+          description_en: string
+          description_th: string | null
+          gallery_urls: string[] | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          is_featured: boolean | null
+          latitude: number | null
+          location: string | null
+          longitude: number | null
+          name_en: string
+          name_th: string | null
+          opening_hours: Json | null
+          price_range: string | null
+          rating_average: number | null
+          rating_count: number | null
+          reservation_required: boolean | null
+          updated_at: string | null
+          website_url: string | null
+        }
+        Insert: {
+          address_en?: string | null
+          address_th?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string | null
+          cuisine_type: string
+          delivery_available?: boolean | null
+          description_en: string
+          description_th?: string | null
+          gallery_urls?: string[] | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          latitude?: number | null
+          location?: string | null
+          longitude?: number | null
+          name_en: string
+          name_th?: string | null
+          opening_hours?: Json | null
+          price_range?: string | null
+          rating_average?: number | null
+          rating_count?: number | null
+          reservation_required?: boolean | null
+          updated_at?: string | null
+          website_url?: string | null
+        }
+        Update: {
+          address_en?: string | null
+          address_th?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string | null
+          cuisine_type?: string
+          delivery_available?: boolean | null
+          description_en?: string
+          description_th?: string | null
+          gallery_urls?: string[] | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          latitude?: number | null
+          location?: string | null
+          longitude?: number | null
+          name_en?: string
+          name_th?: string | null
+          opening_hours?: Json | null
+          price_range?: string | null
+          rating_average?: number | null
+          rating_count?: number | null
+          reservation_required?: boolean | null
+          updated_at?: string | null
+          website_url?: string | null
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          attraction_id: string | null
+          created_at: string | null
+          id: string
+          images: string[] | null
+          is_featured: boolean | null
+          is_verified: boolean | null
+          rating: number
+          restaurant_id: string | null
+          review_text: string | null
+          service_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          attraction_id?: string | null
+          created_at?: string | null
+          id?: string
+          images?: string[] | null
+          is_featured?: boolean | null
+          is_verified?: boolean | null
+          rating: number
+          restaurant_id?: string | null
+          review_text?: string | null
+          service_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          attraction_id?: string | null
+          created_at?: string | null
+          id?: string
+          images?: string[] | null
+          is_featured?: boolean | null
+          is_verified?: boolean | null
+          rating?: number
+          restaurant_id?: string | null
+          review_text?: string | null
+          service_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_attraction_id_fkey"
+            columns: ["attraction_id"]
+            isOneToOne: false
+            referencedRelation: "attractions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      services: {
+        Row: {
+          availability: Json | null
+          contact_email: string | null
+          contact_phone: string | null
+          created_at: string | null
+          description_en: string
+          description_th: string | null
+          gallery_urls: string[] | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          is_featured: boolean | null
+          location: string | null
+          name_en: string
+          name_th: string | null
+          price_thb: number | null
+          price_usd: number | null
+          provider_name: string | null
+          rating_average: number | null
+          rating_count: number | null
+          service_type: string
+          updated_at: string | null
+          website_url: string | null
+        }
+        Insert: {
+          availability?: Json | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string | null
+          description_en: string
+          description_th?: string | null
+          gallery_urls?: string[] | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          location?: string | null
+          name_en: string
+          name_th?: string | null
+          price_thb?: number | null
+          price_usd?: number | null
+          provider_name?: string | null
+          rating_average?: number | null
+          rating_count?: number | null
+          service_type: string
+          updated_at?: string | null
+          website_url?: string | null
+        }
+        Update: {
+          availability?: Json | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string | null
+          description_en?: string
+          description_th?: string | null
+          gallery_urls?: string[] | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          location?: string | null
+          name_en?: string
+          name_th?: string | null
+          price_thb?: number | null
+          price_usd?: number | null
+          provider_name?: string | null
+          rating_average?: number | null
+          rating_count?: number | null
+          service_type?: string
+          updated_at?: string | null
+          website_url?: string | null
+        }
+        Relationships: []
       }
       social_media_connections: {
         Row: {
@@ -2758,6 +3389,8 @@ export type Database = {
         | "completed"
         | "failed"
         | "refunded"
+      platform_type: "lovable" | "bolt" | "cursor" | "windsurf" | "custom"
+      prompt_status: "draft" | "published" | "archived"
       social_platform: "facebook" | "instagram" | "tiktok" | "twitter"
       stripe_order_status: "pending" | "completed" | "canceled"
       stripe_subscription_status:
@@ -2770,6 +3403,7 @@ export type Database = {
         | "canceled"
         | "unpaid"
         | "paused"
+      subscription_status: "free" | "pro" | "enterprise"
       subscription_tier: "free" | "premium" | "vip"
       user_gender: "male" | "female" | "non_binary" | "prefer_not_to_say"
     }
@@ -2920,6 +3554,8 @@ export const Constants = {
         "failed",
         "refunded",
       ],
+      platform_type: ["lovable", "bolt", "cursor", "windsurf", "custom"],
+      prompt_status: ["draft", "published", "archived"],
       social_platform: ["facebook", "instagram", "tiktok", "twitter"],
       stripe_order_status: ["pending", "completed", "canceled"],
       stripe_subscription_status: [
@@ -2933,6 +3569,7 @@ export const Constants = {
         "unpaid",
         "paused",
       ],
+      subscription_status: ["free", "pro", "enterprise"],
       subscription_tier: ["free", "premium", "vip"],
       user_gender: ["male", "female", "non_binary", "prefer_not_to_say"],
     },
