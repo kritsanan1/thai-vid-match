@@ -7,6 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import AuthModal from '@/components/auth/AuthModal';
 import ProfileCard from '@/components/profile/ProfileCard';
 import SwipeInterface from '@/components/swipe/SwipeInterface';
+import AIMatchingEngine from '@/components/matching/AIMatchingEngine';
+import ChatInterface from '@/components/chat/ChatInterface';
 import BottomNavigation from '@/components/navigation/BottomNavigation';
 import { useToast } from '@/hooks/use-toast';
 
@@ -124,19 +126,9 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Content based on current view */}
       <div className="pb-20">
-        {currentView === 'discover' && <SwipeInterface />}
-        {currentView === 'matches' && (
-          <div className="p-4">
-            <h2 className="text-2xl font-bold mb-4">การจับคู่ของคุณ</h2>
-            <p className="text-muted-foreground">ยังไม่มีการจับคู่ เริ่มสไวป์เพื่อค้นหาคนที่ใช่!</p>
-          </div>
-        )}
-        {currentView === 'chat' && (
-          <div className="p-4">
-            <h2 className="text-2xl font-bold mb-4">แชท</h2>
-            <p className="text-muted-foreground">ยังไม่มีการสนทนา พบเจอคนใหม่เพื่อเริ่มแชท!</p>
-          </div>
-        )}
+        {currentView === 'discover' && <AIMatchingEngine />}
+        {currentView === 'matches' && <AIMatchingEngine />}
+        {currentView === 'chat' && <ChatInterface />}
         {currentView === 'profile' && <ProfileCard />}
       </div>
 
